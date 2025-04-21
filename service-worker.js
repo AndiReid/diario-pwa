@@ -1,38 +1,35 @@
-const CACHE_NAME = 'diario-cache-v2'; // ⚠️ Incrementa este número al hacer cambios
+const CACHE_NAME = 'diario-cache-v2'; // cambia esto cada vez que actualices
 const urlsToCache = [
   '/',
-  'index.html',
-  'manifest.json',
-  'icons/icon-192.png',
-  'icons/icon-512.png'
+  '/index.html',
+  '/manifest.json',
+  '/icons/icon-192.png',
+  '/icons/icon-512.png'
 ];
 
-// Instala el SW y guarda en cache los archivos necesarios
+// Instala y guarda en caché los archivos
 self.addEventListener('install', event => {
-  self.skipWaiting(); // ⚡ Activa el SW inmediatamente sin esperar
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => cache.addAll(urlsToCache))
   );
 });
 
-// Elimina caches antiguos al activar el nuevo SW
+// Activa y limpia caché viejo
 self.addEventListener('activate', event => {
-  const whitelist = [CACHE_NAME];
   event.waitUntil(
     caches.keys().then(keys =>
       Promise.all(
-        keys.map(key => {
-          if (!whitelist.includes(key)) {
-            return caches.delete(key); // 🧹 Limpieza
-          }
-        })
+        keys.filter(key => key !== CACHE_NAME)
+            .map(key => caches.delete(key))
       )
     )
   );
+  self.clients.claim();
 });
 
-// Intercepta todas las peticiones y usa cache o red
+// Intercepta las solicitudes
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
