@@ -1,4 +1,4 @@
-const CACHE_NAME = 'diario-cache-v2'; // cambia esto cada vez que actualices
+const CACHE_NAME = 'diario-cache-v3'; // cambia esto cada vez que actualices
 const urlsToCache = [
   '/',
   '/index.html',
@@ -35,4 +35,11 @@ self.addEventListener('fetch', event => {
     caches.match(event.request)
       .then(response => response || fetch(event.request))
   );
+});
+
+// Escucha mensaje desde el cliente
+self.addEventListener('message', event => {
+  if (event.data && event.data.action === 'skipWaiting') {
+    self.skipWaiting();
+  }
 });

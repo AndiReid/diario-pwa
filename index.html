@@ -383,6 +383,26 @@
     </div>
   </div>
 
+  <!-- Notificación para nueva versión -->
+<div id="update-toast" style="
+display: none;
+position: fixed;
+bottom: 20px;
+left: 50%;
+transform: translateX(-50%);
+background-color: #ff4081;
+color: white;
+padding: 12px 20px;
+border-radius: 25px;
+font-family: 'Poppins', sans-serif;
+font-size: 1em;
+cursor: pointer;
+z-index: 10000;
+">
+🔄 ¡Hay una nueva versión! Toca para actualizar.
+</div>
+
+
   <!-- Firebase SDKs -->
   <script type="module">
     // Importamos Firebase como módulo
@@ -580,6 +600,43 @@
     }
   </script>
 
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js')
+      .then(reg => {
+        // Verifica si hay un SW esperando ser activado
+        if (reg.waiting) {
+          mostrarActualizar();
+        }
+
+        // Escucha futuras actualizaciones
+        reg.addEventListener('updatefound', () => {
+          const newWorker = reg.installing;
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              mostrarActualizar();
+            }
+          });
+        });
+
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (!refreshing) {
+            window.location.reload();
+            refreshing = true;
+          }
+        });
+
+        function mostrarActualizar() {
+          const toast = document.getElementById('update-toast');
+          toast.style.display = 'block';
+          toast.addEventListener('click', () => {
+            reg.waiting.postMessage({ action: 'skipWaiting' });
+          });
+        }
+      });
+  }
+</script>
 
 
 </body>
