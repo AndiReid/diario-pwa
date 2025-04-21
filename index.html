@@ -354,7 +354,14 @@
     const fecha = getFechaHoy();
     const timestamp = `[${usuario} - ${fecha}]`;
 
-    const entradaRef = push(ref(db, `diario/${id}`));
+    const diarioRef = ref(db, `diario/${id}`);
+const nuevaEntradaRef = push(diarioRef);
+nuevaEntradaRef.set({
+  autor: usuario,
+  contenido: texto,
+  fecha: new Date().toISOString()
+});
+
     const div = document.createElement("div");
     div.className = "entry";
     div.innerHTML = `
