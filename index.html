@@ -1,23 +1,25 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Nuestro Diario Compartido</title>
-  <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Cedarville+Cursive&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Cedarville+Cursive&display=swap"
+    rel="stylesheet">
   <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#ffb6c1">
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('service-worker.js').then(reg => {
-        console.log('Service Worker registrado:', reg);
-      }).catch(err => {
-        console.log('Error al registrar Service Worker:', err);
+  <meta name="theme-color" content="#ffb6c1">
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js').then(reg => {
+          console.log('Service Worker registrado:', reg);
+        }).catch(err => {
+          console.log('Error al registrar Service Worker:', err);
+        });
       });
-    });
-  }
-</script>
+    }
+  </script>
 
   <style>
     :root {
@@ -249,21 +251,23 @@
     }
   </style>
 </head>
+
 <body>
 
-<div id="selector-usuario">
-  <h2>¿Quién está escribiendo hoy?</h2>
-  <button class="usuario-btn" style="background:#ffb6c1" onclick="seleccionarUsuario('Adriana')">Adriana 💖</button>
-  <button class="usuario-btn" style="background:#add8e6" onclick="seleccionarUsuario('Andrés')">Andrés 💙</button>
-</div>
+  <div id="selector-usuario">
+    <h2>¿Quién está escribiendo hoy?</h2>
+    <button class="usuario-btn" style="background:#ffb6c1" onclick="seleccionarUsuario('Adriana')">Adriana 💖</button>
+    <button class="usuario-btn" style="background:#add8e6" onclick="seleccionarUsuario('Andrés')">Andrés 💙</button>
+  </div>
 
-<h1>📔 Nuestro Diario Compartido</h1>
-<div id="nombre-usuario"></div>
-<div class="surprise-message" id="surprise-message"></div>
-<!-- Sección 1 -->
-<div class="section" id="sec-quejas">
+  <h1>📔 Nuestro Diario Compartido</h1>
+  <div id="nombre-usuario"></div>
+  <div class="surprise-message" id="surprise-message"></div>
+  <!-- Sección 1 -->
+  <div class="section" id="sec-quejas">
     <h2 onclick="toggleSection('sec-quejas')">
-      <span>😠 Quejas (con amor)</span> <span class="indicator" id="indicator-quejas">🔴</span> <span class="toggle-icon">▼</span>
+      <span>😠 Quejas (con amor)</span> <span class="indicator" id="indicator-quejas">🔴</span> <span
+        class="toggle-icon">▼</span>
     </h2>
     <em>"Este espacio no es para herir, sino para liberar con respeto."</em>
     <div class="section-content">
@@ -271,11 +275,12 @@
       <div id="entries-quejas"></div>
     </div>
   </div>
-  
+
   <!-- Sección 2 -->
   <div class="section" id="sec-mejoras">
     <h2 onclick="toggleSection('sec-mejoras')">
-      <span>🔧 Mejoras que construir juntos</span> <span class="indicator" id="indicator-mejoras">🔴</span> <span class="toggle-icon">▼</span>
+      <span>🔧 Mejoras que construir juntos</span> <span class="indicator" id="indicator-mejoras">🔴</span> <span
+        class="toggle-icon">▼</span>
     </h2>
     <em>"No buscamos la perfección, solo más amor."</em>
     <div class="section-content">
@@ -283,11 +288,12 @@
       <div id="entries-mejoras"></div>
     </div>
   </div>
-  
+
   <!-- Sección 3 -->
   <div class="section" id="sec-amor">
     <h2 onclick="toggleSection('sec-amor')">
-      <span>🔍❤️ Cosas que amo de ti</span> <span class="indicator" id="indicator-amor">🔴</span> <span class="toggle-icon">▼</span>
+      <span>🔍❤️ Cosas que amo de ti</span> <span class="indicator" id="indicator-amor">🔴</span> <span
+        class="toggle-icon">▼</span>
     </h2>
     <em>"Incluso lo que no notas, me encanta de ti."</em>
     <div class="section-content">
@@ -295,11 +301,12 @@
       <div id="entries-amor"></div>
     </div>
   </div>
-  
+
   <!-- Sección 4 -->
   <div class="section" id="sec-logros">
     <h2 onclick="toggleSection('sec-logros')">
-      <span>🏅 Logros como pareja</span> <span class="indicator" id="indicator-logros">🔴</span> <span class="toggle-icon">▼</span>
+      <span>🏅 Logros como pareja</span> <span class="indicator" id="indicator-logros">🔴</span> <span
+        class="toggle-icon">▼</span>
     </h2>
     <em>"Cada paso, por pequeño que sea, nos hace más fuertes."</em>
     <div class="section-content">
@@ -307,160 +314,160 @@
       <div id="entries-logros"></div>
     </div>
   </div>
-  
+
   <!-- Firebase SDKs -->
-<script type="module">
-  // Importamos Firebase como módulo
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+  <script type="module">
+    // Importamos Firebase como módulo
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyAfIhSG_NlcAG8FKsrqgxQtoJdhnP988e4",
-    authDomain: "mi-diario-pwa.firebaseapp.com",
-    databaseURL: "https://mi-diario-pwa-default-rtdb.firebaseio.com",
-    projectId: "mi-diario-pwa",
-    storageBucket: "mi-diario-pwa.firebasestorage.app",
-    messagingSenderId: "316540944399",
-    appId: "1:316540944399:web:d9979c446f233b09f3a37a",
-    measurementId: "G-VFPDQ29XCF"
-  };
+    const firebaseConfig = {
+      apiKey: "AIzaSyAfIhSG_NlcAG8FKsrqgxQtoJdhnP988e4",
+      authDomain: "mi-diario-pwa.firebaseapp.com",
+      databaseURL: "https://mi-diario-pwa-default-rtdb.firebaseio.com",
+      projectId: "mi-diario-pwa",
+      storageBucket: "mi-diario-pwa.firebasestorage.app",
+      messagingSenderId: "316540944399",
+      appId: "1:316540944399:web:d9979c446f233b09f3a37a",
+      measurementId: "G-VFPDQ29XCF"
+    };
 
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
 
-  const campos = ["quejas", "mejoras", "amor", "logros"];
-  let usuario = "";
+    const campos = ["quejas", "mejoras", "amor", "logros"];
+    let usuario = "";
 
-  window.seleccionarUsuario = function(nombre) {
-    usuario = nombre;
-    sessionStorage.setItem("diario_usuario", usuario);
-    document.getElementById("selector-usuario").style.display = "none";
-    document.getElementById("nombre-usuario").innerText = `👤 Estás escribiendo como: ${usuario}`;
-    document.body.classList.remove("adriana", "andres");
-    document.body.classList.add(nombre.toLowerCase());
-    inicializar();
-  }
+    window.seleccionarUsuario = function (nombre) {
+      usuario = nombre;
+      sessionStorage.setItem("diario_usuario", usuario);
+      document.getElementById("selector-usuario").style.display = "none";
+      document.getElementById("nombre-usuario").innerText = `👤 Estás escribiendo como: ${usuario}`;
+      document.body.classList.remove("adriana", "andres");
+      document.body.classList.add(nombre.toLowerCase());
+      inicializar();
+    }
 
-  window.toggleSection = function(id) {
-    document.getElementById(id).classList.toggle("open");
-  }
+    window.toggleSection = function (id) {
+      document.getElementById(id).classList.toggle("open");
+    }
 
-  function getFechaHoy() {
-    return new Date().toLocaleDateString("es-ES");
-  }
+    function getFechaHoy() {
+      return new Date().toLocaleDateString("es-ES");
+    }
 
-  window.addEntry = function(id) {
-    const cont = document.getElementById(`entries-${id}`);
-    const fecha = getFechaHoy();
-    const timestamp = `[${usuario} - ${fecha}]`;
+    window.addEntry = function (id) {
+      const cont = document.getElementById(`entries-${id}`);
+      const fecha = getFechaHoy();
+      const timestamp = `[${usuario} - ${fecha}]`;
 
-    const diarioRef = ref(db, `diario/${id}`);
-const nuevaEntradaRef = push(diarioRef);
-nuevaEntradaRef.set({
-  autor: usuario,
-  contenido: texto,
-  fecha: new Date().toISOString()
-});
+      const diarioRef = ref(db, `diario/${id}`);
+      const nuevaEntradaRef = push(diarioRef);
+      nuevaEntradaRef.set({
+        autor: usuario,
+        contenido: texto,
+        fecha: new Date().toISOString()
+      });
 
-    const div = document.createElement("div");
-    div.className = "entry";
-    div.innerHTML = `
+      const div = document.createElement("div");
+      div.className = "entry";
+      div.innerHTML = `
       <div class="entry-header">${timestamp}</div>
       <textarea placeholder="Escribe tu entrada..."></textarea>
       <button class="delete-btn">🗑️</button>
     `;
 
-    const textarea = div.querySelector("textarea");
-    const btn = div.querySelector("button");
+      const textarea = div.querySelector("textarea");
+      const btn = div.querySelector("button");
 
-    textarea.addEventListener("blur", () => {
-      const texto = textarea.value.trim();
-      if (texto) {
-        entradaRef.set({
-          autor: usuario,
-          contenido: texto,
-          fecha: new Date().toISOString()
-        });
-      }
-    });
+      textarea.addEventListener("blur", () => {
+        const texto = textarea.value.trim();
+        if (texto) {
+          entradaRef.set({
+            autor: usuario,
+            contenido: texto,
+            fecha: new Date().toISOString()
+          });
+        }
+      });
 
-    btn.addEventListener("click", () => {
-      if (confirm("¿Eliminar esta entrada?")) {
-        entradaRef.remove();
-        div.remove();
-      }
-    });
+      btn.addEventListener("click", () => {
+        if (confirm("¿Eliminar esta entrada?")) {
+          entradaRef.remove();
+          div.remove();
+        }
+      });
 
-    cont.appendChild(div);
-  }
+      cont.appendChild(div);
+    }
 
-  function mostrarEntradas(id) {
-    const cont = document.getElementById(`entries-${id}`);
-    const dataRef = ref(db, `diario/${id}`);
+    function mostrarEntradas(id) {
+      const cont = document.getElementById(`entries-${id}`);
+      const dataRef = ref(db, `diario/${id}`);
 
-    onValue(dataRef, snapshot => {
-      cont.innerHTML = '';
-      const data = snapshot.val();
-      if (!data) {
-        document.getElementById(`indicator-${id}`).textContent = "🔴";
-        return;
-      }
+      onValue(dataRef, snapshot => {
+        cont.innerHTML = '';
+        const data = snapshot.val();
+        if (!data) {
+          document.getElementById(`indicator-${id}`).textContent = "🔴";
+          return;
+        }
 
-      Object.entries(data).forEach(([key, entrada]) => {
-        const div = document.createElement("div");
-        div.className = "entry";
-        div.innerHTML = `
+        Object.entries(data).forEach(([key, entrada]) => {
+          const div = document.createElement("div");
+          div.className = "entry";
+          div.innerHTML = `
           <div class="entry-header">[${entrada.autor} - ${new Date(entrada.fecha).toLocaleDateString()}]</div>
           <textarea readonly>${entrada.contenido}</textarea>
           <button class="delete-btn">🗑️</button>
         `;
 
-        const btn = div.querySelector("button");
-        btn.addEventListener("click", () => {
-          if (confirm("¿Eliminar esta entrada?")) {
-            remove(ref(db, `diario/${id}/${key}`));
-            div.remove();
-          }
+          const btn = div.querySelector("button");
+          btn.addEventListener("click", () => {
+            if (confirm("¿Eliminar esta entrada?")) {
+              remove(ref(db, `diario/${id}/${key}`));
+              div.remove();
+            }
+          });
+
+          cont.appendChild(div);
         });
 
-        cont.appendChild(div);
+        document.getElementById(`indicator-${id}`).textContent = "✅";
       });
-
-      document.getElementById(`indicator-${id}`).textContent = "✅";
-    });
-  }
-
-  function mostrarMensajeSorpresa() {
-    const mensajes = [
-      "Hoy es un gran día para decir 'te amo' ❤️",
-      "Gracias por construir esto juntos 💫",
-      "Este diario es una semilla de nuestro amor 🌱",
-      "¡Qué bonito es compartir así contigo! ✨",
-      "Escribe con el corazón. Siempre. 💌"
-    ];
-    const msg = mensajes[Math.floor(Math.random() * mensajes.length)];
-    document.getElementById("surprise-message").textContent = msg;
-  }
-
-  function inicializar() {
-    const hora = new Date().getHours();
-    if (hora >= 18 || hora < 6) {
-      document.documentElement.setAttribute("data-theme", "dark");
     }
 
-    mostrarMensajeSorpresa();
-    campos.forEach(seccion => mostrarEntradas(seccion));
-  }
+    function mostrarMensajeSorpresa() {
+      const mensajes = [
+        "Hoy es un gran día para decir 'te amo' ❤️",
+        "Gracias por construir esto juntos 💫",
+        "Este diario es una semilla de nuestro amor 🌱",
+        "¡Qué bonito es compartir así contigo! ✨",
+        "Escribe con el corazón. Siempre. 💌"
+      ];
+      const msg = mensajes[Math.floor(Math.random() * mensajes.length)];
+      document.getElementById("surprise-message").textContent = msg;
+    }
 
-  window.onload = () => {
-    const guardado = sessionStorage.getItem("diario_usuario");
-    if (guardado) seleccionarUsuario(guardado);
-  };
-</script>
+    function inicializar() {
+      const hora = new Date().getHours();
+      if (hora >= 18 || hora < 6) {
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+
+      mostrarMensajeSorpresa();
+      campos.forEach(seccion => mostrarEntradas(seccion));
+    }
+
+    window.onload = () => {
+      const guardado = sessionStorage.getItem("diario_usuario");
+      if (guardado) seleccionarUsuario(guardado);
+    };
+  </script>
 
 
-    
 
-  </body>
-  </html>
-  
+
+</body>
+
+</html>
