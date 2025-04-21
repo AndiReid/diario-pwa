@@ -342,14 +342,14 @@
   <script type="module">
     // Importamos Firebase como módulo
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    import { getDatabase, ref, push, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAfIhSG_NlcAG8FKsrqgxQtoJdhnP988e4",
       authDomain: "mi-diario-pwa.firebaseapp.com",
       databaseURL: "https://mi-diario-pwa-default-rtdb.firebaseio.com",
       projectId: "mi-diario-pwa",
-      storageBucket: "mi-diario-pwa.firebasestorage.app",
+      storageBucket: "mi-diario-pwa.appspot.com",
       messagingSenderId: "316540944399",
       appId: "1:316540944399:web:d9979c446f233b09f3a37a",
       measurementId: "G-VFPDQ29XCF"
