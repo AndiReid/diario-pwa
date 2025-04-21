@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Prueba Firebase</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAfIhSG_NlcAG8FKsrqgxQtoJdhnP988e4",
+      authDomain: "mi-diario-pwa.firebaseapp.com",
+      databaseURL: "https://mi-diario-pwa-default-rtdb.firebaseio.com",
+      projectId: "mi-diario-pwa",
+      storageBucket: "mi-diario-pwa.appspot.com",
+      messagingSenderId: "316540944399",
+      appId: "1:316540944399:web:d9979c446f233b09f3a37a"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    window.onload = () => {
+      const btn = document.getElementById("guardar");
+      btn.addEventListener("click", () => {
+        const refDiario = ref(db, "pruebas");
+        const nuevaEntrada = push(refDiario);
+        set(nuevaEntrada, {
+          autor: "TestUser",
+          mensaje: "Hola desde test-firebase.html",
+          fecha: new Date().toISOString()
+        }).then(() => alert("✅ Entrada guardada"))
+          .catch(err => alert("❌ Error: " + err));
+      });
+    };
+  </script>
+</head>
+<body>
+  <h2>Test de escritura Firebase</h2>
+  <button id="guardar">Guardar entrada de prueba</button>
+</body>
+</html>
