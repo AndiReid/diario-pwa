@@ -361,29 +361,28 @@
       const fecha = getFechaHoy();
       const timestamp = `[${usuario} - ${fecha}]`;
 
-      const diarioRef = ref(db, `diario/${id}`);
-      const nuevaEntradaRef = push(diarioRef);
-      nuevaEntradaRef.set({
-        autor: usuario,
-        contenido: texto,
-        fecha: new Date().toISOString()
-      });
-
+      // Crear el contenedor del nuevo bloque visual
       const div = document.createElement("div");
       div.className = "entry";
       div.innerHTML = `
-      <div class="entry-header">${timestamp}</div>
-      <textarea placeholder="Escribe tu entrada..."></textarea>
-      <button class="delete-btn">🗑️</button>
-    `;
+    <div class="entry-header">${timestamp}</div>
+    <textarea placeholder="Escribe tu entrada..."></textarea>
+    <button class="delete-btn">🗑️</button>
+  `;
 
       const textarea = div.querySelector("textarea");
       const btn = div.querySelector("button");
 
+      // Guardar al perder el foco
       textarea.addEventListener("blur", () => {
         const texto = textarea.value.trim();
         if (texto) {
-          entradaRef.set({
+          // Referencia de Firebase correcta
+          const diarioRef = ref(db, `diario/${id}`);
+          const nuevaEntradaRef = push(diarioRef);
+
+          // Guardar la entrada en la nueva referencia
+          set(nuevaEntradaRef, {
             autor: usuario,
             contenido: texto,
             fecha: new Date().toISOString()
@@ -391,10 +390,10 @@
         }
       });
 
+      // Eliminar visual + remoto
       btn.addEventListener("click", () => {
         if (confirm("¿Eliminar esta entrada?")) {
-          entradaRef.remove();
-          div.remove();
+          div.remove(); // borra del DOM (solo si aún no se ha guardado)
         }
       });
 
