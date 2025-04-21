@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nuestro Diario Compartido</title>
+  <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Cedarville+Cursive&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#ffb6c1">
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('service-worker.js').then(reg => {
+        console.log('Service Worker registrado:', reg);
+      }).catch(err => {
+        console.log('Error al registrar Service Worker:', err);
+      });
+    });
+  }
+</script>
+
+  <style>
+    :root {
+      --bg: #fffaf2;
+      --text: #333;
+      --section-bg: #ffeef0;
+      --section-border: #f4c2c2;
+      --entry-bg: #fff;
+      --muted-text: #666;
+    }
+
+    [data-theme="dark"] {
+      --bg: #1e1e1e;
+      --text: #f0f0f0;
+      --section-bg: #2c2c2c;
+      --section-border: #888;
+      --entry-bg: #3c3c3c;
+      --muted-text: #aaa;
+    }
+
+    body.adriana {
+      --bg: #fff0f5;
+      --text: #b22222;
+      --section-bg: #ffe0eb;
+      --section-border: #f4a9bd;
+      --entry-bg: #fffafc;
+      --muted-text: #aa6a6a;
+    }
+
+    body.andres {
+      --bg: #e6f7ff;
+      --text: #003366;
+      --section-bg: #d0f0ff;
+      --section-border: #a0c4ff;
+      --entry-bg: #ffffff;
+      --muted-text: #446;
+    }
+
+    body {
+      font-family: 'Indie Flower', cursive;
+      background-color: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+      transition: background-color 0.4s ease, color 0.4s ease;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      font-family: 'Cedarville Cursive', cursive;
+    }
+
+    #nombre-usuario {
+      text-align: center;
+      font-size: 1.2em;
+      margin-bottom: 10px;
+    }
+
+    .surprise-message {
+      text-align: center;
+      font-size: 1.2em;
+      margin: 20px 0;
+      color: #ff69b4;
+      font-family: 'Cedarville Cursive', cursive;
+    }
+
+    .section {
+      margin-bottom: 20px;
+      border: 2px dashed var(--section-border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .section h2 {
+      margin: 0;
+      padding: 12px 16px;
+      background: var(--section-bg);
+      font-size: 1.5em;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'Cedarville Cursive', cursive;
+    }
+
+    .section em {
+      display: block;
+      padding: 0 16px;
+      font-size: 1em;
+      color: var(--muted-text);
+    }
+
+    .section-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease;
+      padding: 0 16px;
+    }
+
+    .section.open .section-content {
+      max-height: 1000px;
+    }
+
+    .entry {
+      background: var(--entry-bg);
+      border: 1px solid var(--section-border);
+      border-radius: 8px;
+      padding: 10px;
+      margin: 10px 0;
+      position: relative;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+
+    .entry.fade-out {
+      opacity: 0;
+    }
+
+    .entry-header {
+      font-size: 0.9em;
+      color: var(--muted-text);
+      margin-bottom: 5px;
+    }
+
+    .entry textarea {
+      width: 100%;
+      border: none;
+      background: transparent;
+      resize: vertical;
+      font-family: 'Indie Flower', cursive;
+      font-size: 1.1em;
+      color: var(--text);
+    }
+
+    .add-entry-btn {
+      margin: 10px 0;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 5px;
+      background: var(--section-border);
+      cursor: pointer;
+    }
+
+    .toggle-icon {
+      font-size: 1.2em;
+      transition: transform 0.3s;
+    }
+
+    .section.open .toggle-icon {
+      transform: rotate(180deg);
+    }
+
+    .indicator {
+      margin-left: 10px;
+    }
+
+    .delete-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.2em;
+      color: crimson;
+      position: absolute;
+      top: 8px;
+      right: 10px;
+    }
+
+    #selector-usuario {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
+
+    #selector-usuario h2 {
+      font-size: 1.8em;
+      margin-bottom: 20px;
+      color: white;
+    }
+
+    .usuario-btn {
+      font-size: 1.4em;
+      padding: 10px 20px;
+      margin: 10px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .usuario-btn:hover {
+      transform: scale(1.05);
+    }
+
+    @media only screen and (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+
+      h1 {
+        font-size: 2em;
+      }
+
+      .section h2 {
+        font-size: 1.3em;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .add-entry-btn {
+        width: 100%;
+        font-size: 1em;
+      }
+
+      .entry textarea {
+        font-size: 1em;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div id="selector-usuario">
+  <h2>¿Quién está escribiendo hoy?</h2>
+  <button class="usuario-btn" style="background:#ffb6c1" onclick="seleccionarUsuario('Adriana')">Adriana 💖</button>
+  <button class="usuario-btn" style="background:#add8e6" onclick="seleccionarUsuario('Andrés')">Andrés 💙</button>
+</div>
+
+<h1>📔 Nuestro Diario Compartido</h1>
+<div id="nombre-usuario"></div>
+<div class="surprise-message" id="surprise-message"></div>
+<!-- Sección 1 -->
+<div class="section" id="sec-quejas">
+    <h2 onclick="toggleSection('sec-quejas')">
+      <span>😠 Quejas (con amor)</span> <span class="indicator" id="indicator-quejas">🔴</span> <span class="toggle-icon">▼</span>
+    </h2>
+    <em>"Este espacio no es para herir, sino para liberar con respeto."</em>
+    <div class="section-content">
+      <button class="add-entry-btn" onclick="addEntry('quejas')">Agregar entrada</button>
+      <div id="entries-quejas"></div>
+    </div>
+  </div>
+  
+  <!-- Sección 2 -->
+  <div class="section" id="sec-mejoras">
+    <h2 onclick="toggleSection('sec-mejoras')">
+      <span>🔧 Mejoras que construir juntos</span> <span class="indicator" id="indicator-mejoras">🔴</span> <span class="toggle-icon">▼</span>
+    </h2>
+    <em>"No buscamos la perfección, solo más amor."</em>
+    <div class="section-content">
+      <button class="add-entry-btn" onclick="addEntry('mejoras')">Agregar entrada</button>
+      <div id="entries-mejoras"></div>
+    </div>
+  </div>
+  
+  <!-- Sección 3 -->
+  <div class="section" id="sec-amor">
+    <h2 onclick="toggleSection('sec-amor')">
+      <span>🔍❤️ Cosas que amo de ti</span> <span class="indicator" id="indicator-amor">🔴</span> <span class="toggle-icon">▼</span>
+    </h2>
+    <em>"Incluso lo que no notas, me encanta de ti."</em>
+    <div class="section-content">
+      <button class="add-entry-btn" onclick="addEntry('amor')">Agregar entrada</button>
+      <div id="entries-amor"></div>
+    </div>
+  </div>
+  
+  <!-- Sección 4 -->
+  <div class="section" id="sec-logros">
+    <h2 onclick="toggleSection('sec-logros')">
+      <span>🏅 Logros como pareja</span> <span class="indicator" id="indicator-logros">🔴</span> <span class="toggle-icon">▼</span>
+    </h2>
+    <em>"Cada paso, por pequeño que sea, nos hace más fuertes."</em>
+    <div class="section-content">
+      <button class="add-entry-btn" onclick="addEntry('logros')">Agregar entrada</button>
+      <div id="entries-logros"></div>
+    </div>
+  </div>
+  
+  <!-- Firebase SDKs -->
+<script type="module">
+  // Importamos Firebase como módulo
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAfIhSG_NlcAG8FKsrqgxQtoJdhnP988e4",
+    authDomain: "mi-diario-pwa.firebaseapp.com",
+    databaseURL: "https://mi-diario-pwa-default-rtdb.firebaseio.com",
+    projectId: "mi-diario-pwa",
+    storageBucket: "mi-diario-pwa.firebasestorage.app",
+    messagingSenderId: "316540944399",
+    appId: "1:316540944399:web:d9979c446f233b09f3a37a",
+    measurementId: "G-VFPDQ29XCF"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  const campos = ["quejas", "mejoras", "amor", "logros"];
+  let usuario = "";
+
+  window.seleccionarUsuario = function(nombre) {
+    usuario = nombre;
+    sessionStorage.setItem("diario_usuario", usuario);
+    document.getElementById("selector-usuario").style.display = "none";
+    document.getElementById("nombre-usuario").innerText = `👤 Estás escribiendo como: ${usuario}`;
+    document.body.classList.remove("adriana", "andres");
+    document.body.classList.add(nombre.toLowerCase());
+    inicializar();
+  }
+
+  window.toggleSection = function(id) {
+    document.getElementById(id).classList.toggle("open");
+  }
+
+  function getFechaHoy() {
+    return new Date().toLocaleDateString("es-ES");
+  }
+
+  window.addEntry = function(id) {
+    const cont = document.getElementById(`entries-${id}`);
+    const fecha = getFechaHoy();
+    const timestamp = `[${usuario} - ${fecha}]`;
+
+    const entradaRef = push(ref(db, `diario/${id}`));
+    const div = document.createElement("div");
+    div.className = "entry";
+    div.innerHTML = `
+      <div class="entry-header">${timestamp}</div>
+      <textarea placeholder="Escribe tu entrada..."></textarea>
+      <button class="delete-btn">🗑️</button>
+    `;
+
+    const textarea = div.querySelector("textarea");
+    const btn = div.querySelector("button");
+
+    textarea.addEventListener("blur", () => {
+      const texto = textarea.value.trim();
+      if (texto) {
+        entradaRef.set({
+          autor: usuario,
+          contenido: texto,
+          fecha: new Date().toISOString()
+        });
+      }
+    });
+
+    btn.addEventListener("click", () => {
+      if (confirm("¿Eliminar esta entrada?")) {
+        entradaRef.remove();
+        div.remove();
+      }
+    });
+
+    cont.appendChild(div);
+  }
+
+  function mostrarEntradas(id) {
+    const cont = document.getElementById(`entries-${id}`);
+    const dataRef = ref(db, `diario/${id}`);
+
+    onValue(dataRef, snapshot => {
+      cont.innerHTML = '';
+      const data = snapshot.val();
+      if (!data) {
+        document.getElementById(`indicator-${id}`).textContent = "🔴";
+        return;
+      }
+
+      Object.entries(data).forEach(([key, entrada]) => {
+        const div = document.createElement("div");
+        div.className = "entry";
+        div.innerHTML = `
+          <div class="entry-header">[${entrada.autor} - ${new Date(entrada.fecha).toLocaleDateString()}]</div>
+          <textarea readonly>${entrada.contenido}</textarea>
+          <button class="delete-btn">🗑️</button>
+        `;
+
+        const btn = div.querySelector("button");
+        btn.addEventListener("click", () => {
+          if (confirm("¿Eliminar esta entrada?")) {
+            remove(ref(db, `diario/${id}/${key}`));
+            div.remove();
+          }
+        });
+
+        cont.appendChild(div);
+      });
+
+      document.getElementById(`indicator-${id}`).textContent = "✅";
+    });
+  }
+
+  function mostrarMensajeSorpresa() {
+    const mensajes = [
+      "Hoy es un gran día para decir 'te amo' ❤️",
+      "Gracias por construir esto juntos 💫",
+      "Este diario es una semilla de nuestro amor 🌱",
+      "¡Qué bonito es compartir así contigo! ✨",
+      "Escribe con el corazón. Siempre. 💌"
+    ];
+    const msg = mensajes[Math.floor(Math.random() * mensajes.length)];
+    document.getElementById("surprise-message").textContent = msg;
+  }
+
+  function inicializar() {
+    const hora = new Date().getHours();
+    if (hora >= 18 || hora < 6) {
+      document.documentElement.setAttribute("data-theme", "dark");
+    }
+
+    mostrarMensajeSorpresa();
+    campos.forEach(seccion => mostrarEntradas(seccion));
+  }
+
+  window.onload = () => {
+    const guardado = sessionStorage.getItem("diario_usuario");
+    if (guardado) seleccionarUsuario(guardado);
+  };
+</script>
+
+
+    
+
+  </body>
+  </html>
+  
