@@ -401,40 +401,44 @@
     }
 
     function mostrarEntradas(id) {
-      const cont = document.getElementById(`entries-${id}`);
-      const dataRef = ref(db, `diario/${id}`);
+  const cont = document.getElementById(`entries-${id}`);
+  const dataRef = ref(db, `diario/${id}`);
 
-      onValue(dataRef, snapshot => {
-        cont.innerHTML = '';
-        const data = snapshot.val();
-        if (!data) {
-          document.getElementById(`indicator-${id}`).textContent = "🔴";
-          return;
-        }
+  onValue(dataRef, snapshot => {
+    cont.innerHTML = ''; // Limpiar contenido anterior
+    const data = snapshot.val();
 
-        Object.entries(data).forEach(([key, entrada]) => {
-          const div = document.createElement("div");
-          div.className = "entry";
-          div.innerHTML = `
-          <div class="entry-header">[${entrada.autor} - ${new Date(entrada.fecha).toLocaleDateString()}]</div>
-          <textarea readonly>${entrada.contenido}</textarea>
-          <button class="delete-btn">🗑️</button>
-        `;
-
-          const btn = div.querySelector("button");
-          btn.addEventListener("click", () => {
-            if (confirm("¿Eliminar esta entrada?")) {
-              remove(ref(db, `diario/${id}/${key}`));
-              div.remove();
-            }
-          });
-
-          cont.appendChild(div);
-        });
-
-        document.getElementById(`indicator-${id}`).textContent = "✅";
-      });
+    if (!data) {
+      document.getElementById(`indicator-${id}`).textContent = "🔴";
+      return;
     }
+
+    // Recorrer las entradas
+    Object.entries(data).forEach(([key, entrada]) => {
+      const div = document.createElement("div");
+      div.className = "entry";
+      div.innerHTML = `
+        <div class="entry-header">[${entrada.autor} - ${new Date(entrada.fecha).toLocaleDateString()}]</div>
+        <textarea readonly>${entrada.contenido}</textarea>
+        <button class="delete-btn" title="Eliminar entrada">🗑️</button>
+      `;
+
+      const btn = div.querySelector("button");
+      btn.addEventListener("click", () => {
+        if (confirm("¿Eliminar esta entrada?")) {
+          const entryRef = ref(db, `diario/${id}/${key}`);
+          remove(entryRef);
+        }
+      });
+
+      cont.appendChild(div);
+    });
+
+    // Actualizar indicador visual
+    document.getElementById(`indicator-${id}`).textContent = "✅";
+  });
+}
+
 
     function mostrarMensajeSorpresa() {
       const mensajes = [
