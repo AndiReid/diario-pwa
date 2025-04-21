@@ -5,8 +5,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Nuestro Diario Compartido</title>
-  <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Cedarville+Cursive&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Cedarville+Cursive&display=swap" rel="stylesheet">
+
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#ffb6c1">
   <script>
@@ -22,44 +22,62 @@
   </script>
 
   <style>
-    :root {
-      --bg: #fffaf2;
-      --text: #333;
-      --section-bg: #ffeef0;
-      --section-border: #f4c2c2;
-      --entry-bg: #fff;
-      --muted-text: #666;
-    }
+/* Colores base */
+:root {
+  --bg: #fffaf2;
+  --text: #333;
+  --section-bg: #ffeef0;
+  --section-border: #f4c2c2;
+  --entry-bg: #fff;
+  --muted-text: #666;
+}
 
-    [data-theme="dark"] {
-      --bg: #1e1e1e;
-      --text: #f0f0f0;
-      --section-bg: #2c2c2c;
-      --section-border: #888;
-      --entry-bg: #3c3c3c;
-      --muted-text: #aaa;
-    }
 
-    body.adriana {
-      --bg: #fff0f5;
-      --text: #b22222;
-      --section-bg: #ffe0eb;
-      --section-border: #f4a9bd;
-      --entry-bg: #fffafc;
-      --muted-text: #aa6a6a;
-    }
 
-    body.andres {
-      --bg: #e6f7ff;
-      --text: #003366;
-      --section-bg: #d0f0ff;
-      --section-border: #a0c4ff;
-      --entry-bg: #ffffff;
-      --muted-text: #446;
-    }
+/* Temas claros */
+body.adriana {
+  --bg: #f3e5f5;
+  --text: #4a148c;
+  --section-bg: #e1bee7;
+  --section-border: #ce93d8;
+  --entry-bg: #f0d7ff;
+  --muted-text: #6a1b9a;
+}
+
+body.andres {
+  --bg: #e8f5e9;
+  --text: #1b5e20;
+  --section-bg: #c8e6c9;
+  --section-border: #a5d6a7;
+  --entry-bg: #dcedc8;
+  --muted-text: #2e7d32;
+}
+
+/* Temas oscuros */
+body.adriana[data-theme="dark"] {
+  --bg: #2d2534;
+  --text: #fce4ff;
+  --section-bg: #3a2a4c;
+  --section-border: #7e57c2;
+  --entry-bg: #4a3a5d;
+  --muted-text: #d1b3ff;
+}
+
+body.andres[data-theme="dark"] {
+  --bg: #1b2e1b;
+  --text: #c8e6c9;
+  --section-bg: #2e4d2f;
+  --section-border: #66bb6a;
+  --entry-bg: #3d5f3d;
+  --muted-text: #a5d6a7;
+}
+
+
+
+
 
     body {
-      font-family: 'Indie Flower', cursive;
+      font-family: 'Poppins', sans-serif;
       background-color: var(--bg);
       color: var(--text);
       margin: 0;
@@ -73,7 +91,7 @@
       text-align: center;
       font-size: 2.5em;
       margin-bottom: 10px;
-      font-family: 'Cedarville Cursive', cursive;
+      font-family: 'Poppins', sans-serif;
     }
 
     #nombre-usuario {
@@ -87,7 +105,7 @@
       font-size: 1.2em;
       margin: 20px 0;
       color: #ff69b4;
-      font-family: 'Cedarville Cursive', cursive;
+      font-family: 'Poppins', sans-serif;
     }
 
     .section {
@@ -106,7 +124,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-family: 'Cedarville Cursive', cursive;
+      font-family: 'Poppins', sans-serif;
     }
 
     .section em {
@@ -153,7 +171,7 @@
       border: none;
       background: transparent;
       resize: vertical;
-      font-family: 'Indie Flower', cursive;
+      font-family: 'Poppins', sans-serif;
       font-size: 1.1em;
       color: var(--text);
     }
@@ -263,7 +281,7 @@
   transform: translateX(-50%);
   background: #ff69b4;
   color: white;
-  font-family: 'Indie Flower', cursive;
+  font-family: 'Poppins', sans-serif;
   padding: 10px 20px;
   border-radius: 20px;
   box-shadow: 0 0 10px rgba(0,0,0,0.2);
@@ -272,6 +290,8 @@
   z-index: 999;
 }
 
+
+
   </style>
 </head>
 
@@ -279,8 +299,8 @@
 
   <div id="selector-usuario">
     <h2>¿Quién está escribiendo hoy?</h2>
-    <button class="usuario-btn" style="background:#ffb6c1" onclick="seleccionarUsuario('Adriana')">Adriana 💖</button>
-    <button class="usuario-btn" style="background:#add8e6" onclick="seleccionarUsuario('Andrés')">Andrés 💙</button>
+    <button class="usuario-btn" style="background:#e8b6ff" onclick="seleccionarUsuario('Adriana')">Adriana 💖</button>
+    <button class="usuario-btn" style="background:#ade6b2" onclick="seleccionarUsuario('Andres')">Andrés 💚</button>
   </div>
 
   <h1>📔 Nuestro Diario Compartido</h1>
@@ -362,14 +382,31 @@
     let usuario = "";
 
     window.seleccionarUsuario = function (nombre) {
-      usuario = nombre;
-      sessionStorage.setItem("diario_usuario", usuario);
-      document.getElementById("selector-usuario").style.display = "none";
-      document.getElementById("nombre-usuario").innerText = `👤 Estás escribiendo como: ${usuario}`;
-      document.body.classList.remove("adriana", "andres");
-      document.body.classList.add(nombre.toLowerCase());
-      inicializar();
-    }
+  usuario = nombre;
+  sessionStorage.setItem("diario_usuario", usuario);
+
+  // Ocultar selector y mostrar quién escribe
+  document.getElementById("selector-usuario").style.display = "none";
+  document.getElementById("nombre-usuario").innerText = `👤 Estás escribiendo como: ${usuario}`;
+
+  // Aplicar clase al body según usuario
+  document.body.classList.remove("adriana", "andres");
+  document.body.classList.add(nombre.toLowerCase());
+
+  // Aplicar modo oscuro si es de noche (18:00 - 05:59)
+  const hora = new Date().getHours();
+  if (hora >= 18 || hora < 6) {
+    document.body.setAttribute("data-theme", "dark");
+  } else {
+    document.body.removeAttribute("data-theme");
+  }
+
+  inicializar();
+}
+
+
+
+
 
     window.toggleSection = function (id) {
       document.getElementById(id).classList.toggle("open");
@@ -497,10 +534,6 @@ setTimeout(() => heart.remove(), 1500);
     }
 
     function inicializar() {
-      const hora = new Date().getHours();
-      if (hora >= 18 || hora < 6) {
-        document.documentElement.setAttribute("data-theme", "dark");
-      }
 
       mostrarMensajeSorpresa();
       campos.forEach(seccion => mostrarEntradas(seccion));
