@@ -317,6 +317,45 @@
       transition: opacity 0.5s;
       z-index: 999;
     }
+<<<<<<< HEAD
+
+  /* Modal */
+#modal {
+  position: fixed;
+  z-index: 2000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#modal-content {
+  background: var(--entry-bg);
+  color: var(--text);
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  font-family: 'Poppins', sans-serif;
+  position: relative;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+#close-modal {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 2em;
+  color: var(--muted-text);
+  cursor: pointer;
+}
+=======
+>>>>>>> 94f1ea20681aea8277d1122ca5199f05f66f9300
   </style>
 </head>
 
@@ -382,6 +421,36 @@
       <div id="entries-logros"></div>
     </div>
   </div>
+
+<<<<<<< HEAD
+    <!-- Modal para leer -->
+    <div id="modal" style="display:none;">
+      <div id="modal-content">
+        <span id="close-modal">&times;</span>
+        <div id="modal-text"></div>
+      </div>
+    </div>
+=======
+  <!-- Notificación para nueva versión -->
+<div id="update-toast" style="
+display: none;
+position: fixed;
+bottom: 20px;
+left: 50%;
+transform: translateX(-50%);
+background-color: #ff4081;
+color: white;
+padding: 12px 20px;
+border-radius: 25px;
+font-family: 'Poppins', sans-serif;
+font-size: 1em;
+cursor: pointer;
+z-index: 10000;
+">
+🔄 ¡Hay una nueva versión! Toca para actualizar.
+</div>
+
+>>>>>>> 94f1ea20681aea8277d1122ca5199f05f66f9300
 
   <!-- Firebase SDKs -->
   <script type="module">
@@ -507,6 +576,24 @@
     }
 
     function mostrarEntradas(id) {
+<<<<<<< HEAD
+  const cont = document.getElementById(`entries-${id}`);
+  const dataRef = ref(db, `diario/${id}`);
+
+  onValue(dataRef, snapshot => {
+    cont.innerHTML = ''; // Limpiar contenido anterior
+    const data = snapshot.val();
+
+    if (!data) {
+      document.getElementById(`indicator-${id}`).textContent = "🔴";
+      return;
+    }
+
+    Object.entries(data).forEach(([key, entrada]) => {
+      const div = document.createElement("div");
+      div.className = "entry";
+      div.innerHTML = `
+=======
       const cont = document.getElementById(`entries-${id}`);
       const dataRef = ref(db, `diario/${id}`);
 
@@ -524,11 +611,34 @@
           const div = document.createElement("div");
           div.className = "entry";
           div.innerHTML = `
+>>>>>>> 94f1ea20681aea8277d1122ca5199f05f66f9300
         <div class="entry-header">[${entrada.autor} - ${new Date(entrada.fecha).toLocaleDateString()}]</div>
         <textarea readonly>${entrada.contenido}</textarea>
         <button class="delete-btn" title="Eliminar entrada">🗑️</button>
       `;
 
+<<<<<<< HEAD
+      const textarea = div.querySelector("textarea"); // ✅ Aquí capturamos el textarea
+      textarea.addEventListener('click', () => {
+        abrirModal(entrada.contenido);
+      });
+
+      const btn = div.querySelector("button");
+      btn.addEventListener("click", () => {
+        if (confirm("¿Eliminar esta entrada?")) {
+          const entryRef = ref(db, `diario/${id}/${key}`);
+          remove(entryRef);
+        }
+      });
+
+      cont.appendChild(div);
+    });
+
+    document.getElementById(`indicator-${id}`).textContent = "✅";
+  });
+}
+
+=======
           const btn = div.querySelector("button");
           btn.addEventListener("click", () => {
             if (confirm("¿Eliminar esta entrada?")) {
@@ -544,6 +654,7 @@
         document.getElementById(`indicator-${id}`).textContent = "✅";
       });
     }
+>>>>>>> 94f1ea20681aea8277d1122ca5199f05f66f9300
 
 
     function mostrarMensajeSorpresa() {
@@ -578,10 +689,77 @@
       toast.style.opacity = "1";
       setTimeout(() => toast.style.opacity = "0", 2500);
     }
+<<<<<<< HEAD
+
+        // Función para abrir el modal
+function abrirModal(texto) {
+  const modal = document.getElementById('modal');
+  const modalText = document.getElementById('modal-text');
+  modalText.textContent = texto;
+  modal.style.display = 'flex';
+}
+
+// Función para cerrar el modal
+document.getElementById('close-modal').addEventListener('click', () => {
+  document.getElementById('modal').style.display = 'none';
+});
+
+// También cerrar modal si clic fuera del contenido
+document.getElementById('modal').addEventListener('click', (e) => {
+  if (e.target.id === 'modal') {
+    document.getElementById('modal').style.display = 'none';
+  }
+});
   </script>
 
 
 
 </body>
 
+=======
+  </script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js')
+      .then(reg => {
+        // Verifica si hay un SW esperando ser activado
+        if (reg.waiting) {
+          mostrarActualizar();
+        }
+
+        // Escucha futuras actualizaciones
+        reg.addEventListener('updatefound', () => {
+          const newWorker = reg.installing;
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              mostrarActualizar();
+            }
+          });
+        });
+
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (!refreshing) {
+            window.location.reload();
+            refreshing = true;
+          }
+        });
+
+        function mostrarActualizar() {
+          const toast = document.getElementById('update-toast');
+          toast.style.display = 'block';
+          toast.addEventListener('click', () => {
+            reg.waiting.postMessage({ action: 'skipWaiting' });
+          });
+        }
+      });
+  }
+</script>
+
+
+</body>
+<!-- Cambio mínimo para forzar deploy -->
+<!-- Cambio mínimo para forzar deploy -->
+>>>>>>> 94f1ea20681aea8277d1122ca5199f05f66f9300
 </html>
